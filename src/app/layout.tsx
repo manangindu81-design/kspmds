@@ -5,6 +5,7 @@ import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { DataProvider } from "./context/DataContext";
 import ClientLayout from "./components/ClientLayout";
+import { SessionProvider } from "next-auth/react";
 
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -23,9 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </Head>
       <body style={{ margin: 0, fontFamily: "'DM Sans', sans-serif" }}>
         <Script src="/js/app.js" strategy="afterInteractive" />
-        <DataProvider>
-          <ClientLayout>{children}</ClientLayout>
-        </DataProvider>
+        <SessionProvider>
+          <DataProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </DataProvider>
+        </SessionProvider>
       </body>
     </html>
   );
