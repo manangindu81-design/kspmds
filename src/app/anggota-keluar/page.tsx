@@ -58,18 +58,18 @@ export default function AnggotaKeluarPage() {
       return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
  
-    const [foundAnggota, setFoundAnggota] = useState<Anggota | null>(null);
+const [foundAnggota, setFoundAnggota] = useState<Anggota | null>(null);
     const [simpananList, setSimpananList] = useState<any[]>([]);
- 
-    // Handle manual input change
-    useEffect(() => {
-      if (manualInput.trim() === "") {
+
+    const handleManualInputChange = (value: string) => {
+      if (value.trim() === "") {
         setFoundAnggota(null);
+        setSimpananList([]);
         return;
       }
       const matched = anggota.find((a: Anggota) =>
-        String(a.nomorNBA).toLowerCase().includes(manualInput.toLowerCase().replace(/^nba-?/, "")) ||
-        a.nama.toLowerCase().includes(manualInput.toLowerCase())
+        String(a.nomorNBA).toLowerCase().includes(value.toLowerCase().replace(/^nba-?/, "")) ||
+        a.nama.toLowerCase().includes(value.toLowerCase())
       );
       if (matched && matched.statusKeanggotaan !== "Non-Aktif") {
         setFoundAnggota(matched);
@@ -79,8 +79,8 @@ export default function AnggotaKeluarPage() {
         setFoundAnggota(null);
         setSimpananList([]);
       }
-    }, [manualInput, anggota, simpanan]);
- 
+    };
+
     const handlePengunduran = async (anggotaId: number) => {
       if (!exitDate) {
         alert("Silakan pilih tanggal pengunduran.");
@@ -651,7 +651,10 @@ export default function AnggotaKeluarPage() {
               type="text"
               placeholder="Contoh: 001, NBA-001, atau ketik nama di bawah..."
               value={manualInput}
-              onChange={(e) => setManualInput(e.target.value)}
+              onChange={(e) => {
+                 setManualInput(e.target.value);
+                 handleManualInputChange(e.target.value);
+               }}
               style={{
                 width: "100%",
                 padding: 12,
