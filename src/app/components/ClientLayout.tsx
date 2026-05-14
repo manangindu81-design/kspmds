@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useData } from "../context/DataContext";
+import { useSession, signOut } from "next-auth/react";
 import AppLogo from "./AppLogo";
 
 const formatRupiah = (num: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(num);
@@ -22,8 +23,9 @@ const navItems = [
 ];
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const { anggota, simpanan, pinjaman } = useData();
+   const pathname = usePathname();
+   const { anggota, simpanan, pinjaman } = useData();
+   const { data: session } = useSession();
   
   const totalSimpanan = simpanan.reduce((sum, s) => sum + s.jumlah, 0);
   const totalPinjaman = pinjaman.filter(p => p.status === "Disetujui").reduce((sum, p) => sum + p.jumlah, 0);
@@ -55,33 +57,55 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
           </Link>
           
-          <nav style={{ display: "flex", gap: 4 }}>
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || (item.href !== "/" && (pathname || "").startsWith(item.href));
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "10px 16px",
-                    borderRadius: 8,
-                    textDecoration: "none",
-                    color: isActive ? "#1B4D3E" : "rgba(255,255,255,0.85)",
-                    background: isActive ? "white" : "transparent",
-                    fontWeight: isActive ? 600 : 500,
-                    fontSize: 14,
-                    transition: "all 0.2s ease"
-                  }}
-                >
-                  <span style={{ fontSize: 16 }}>{item.icon}</span>
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+<nav style={{ display: "flex", gap: 4 }}>
+             {navItems.map((item) => {
+               const isActive = pathname === item.href || (item.href !== "/" && (pathname || "").startsWith(item.href));
+               return (
+                 <Link
+                   key={item.href}
+                   href={item.href}
+                   style={{
+                     display: "flex",
+                     alignItems: "center",
+                     gap: 6,
+                     padding: "10px 16px",
+                     borderRadius: 8,
+                     textDecoration: "none",
+                     color: isActive ? "#1B4D3E" : "rgba(255,255,255,0.85)",
+                     background: isActive ? "white" : "transparent",
+                     fontWeight: isActive ? 600 : 500,
+                     fontSize: 14,
+                     transition: "all 0.2s ease"
+                   }}
+                 >
+                   <span style={{ fontSize: 16 }}>{item.icon}</span>
+                   <span>{item.label}</span>
+                 </Link>
+               );
+             })}
+             {session && (
+               <button
+                 onClick={() => signOut()}
+                 style={{
+                   display: "flex",
+                   alignItems: "center",
+                   gap: 6,
+                   padding: "10px 16px",
+                   borderRadius: 8,
+                   textDecoration: "none",
+                   color: "rgba(255,255,255,0.85)",
+                   background: "transparent",
+                   fontWeight: 500,
+                   fontSize: 14,
+                   border: "none",
+                   cursor: "pointer"
+                 }}
+               >
+                 <span style={{ fontSize: 16 }}>🚪</span>
+                 <span>Keluar</span>
+               </button>
+             )}
+           </nav>
         </div>
       </header>
 
