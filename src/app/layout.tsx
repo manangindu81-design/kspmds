@@ -3,9 +3,7 @@ import Head from "next/head";
 import Script from "next/script";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { DataProvider } from "./context/DataContext";
-import ClientLayout from "./components/ClientLayout";
-import { SessionProvider } from "next-auth/react";
+import Providers from "./providers";
 
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -24,11 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </Head>
       <body style={{ margin: 0, fontFamily: "'DM Sans', sans-serif" }}>
         <Script src="/js/app.js" strategy="afterInteractive" />
-        <SessionProvider>
-          <DataProvider>
-            <ClientLayout>{children}</ClientLayout>
-          </DataProvider>
-        </SessionProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
