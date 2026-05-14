@@ -1,0 +1,190 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Authentication
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?
+  role          String    @default("user") // admin, user
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// KSP Models
+model Anggota {
+  id                Int       @id @default(autoincrement())
+  nomorNBA          String    @unique @map("nomor_nba")
+  nik               String?
+  nama              String
+  tempatLahir       String?   @map("tempat_lahir")
+  tanggalLahir      DateTime? @map("tanggal_lahir")
+  jkelamin          String?   @map("jkelamin")
+  status            String    @default("Aktif")
+  namaSuamiIstri    String?   @map("nama_suami_istri")
+  jumlahAnak        String?   @map("jumlah_anak")
+  namaIbuKandung    String?   @map("nama_ibu_kandung")
+  alamat          String
+  rt              String?
+  rw              String?
+  kel             String?
+  kec             String?
+  kota            String?
+  telepon         String
+  email           String?
+  pekerjaan       String
+  pendapatan      String?
+  tanggalJoin     DateTime  @default(now()) @map("tanggal_join")
+  statusKeanggotaan String  @default("Aktif") @map("status_keanggotaan")
+  tanggalPengunduran DateTime? @map("tanggal_pengunduran")
+  simpanan        Simpanan[]
+  pinjaman        Pinjaman[]
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("anggota")
+}
+
+model Simpanan {
+  id            Int      @id @default(autoincrement())
+  idAnggota     Int      @map("id_anggota")
+  nama          String
+  nomorAnggota  String   @map("nomor_anggota")
+  tanggal       DateTime @default(now())
+  jenisSimpanan String   @map("jenis_simpanan")
+  jumlah        Int
+  metode        String
+  status        Boolean? @default(true)
+  anggota       Anggota  @relation(fields: [idAnggota], references: [id])
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("simpanan")
+}
+
+model Pinjaman {
+  id              Int      @id @default(autoincrement())
+  idAnggota       Int      @map("id_anggota")
+  nama            String
+  nomorAnggota    String   @map("nomor_anggota")
+  namaSuamiIstri  String?  @map("nama_suami_istri")
+  alamat          String
+  tanggal         DateTime @default(now())
+  sistem          String   @default("flat")
+  jenisPinjaman   String   @map("jenis_pinjaman")
+  jumlah          Int
+  tenor           Int
+  bunga           Float
+  denda           Float    @default(2)
+  tujuan          String?
+  status          String   @default("Disetujui")
+  biayaAdmin      Int      @map("biaya_admin")
+  sudahDibayar    Int      @default(0) @map("sudah_dibayar")
+  outstanding     Int      @map("outstanding")
+  jenisPencairan  String   @map("jenis_pencairan")
+  noPerjanjian    String   @map("no_perjanjian")
+  tanggalJatuhTempo DateTime @map("tanggal_jatuh_tempo")
+  biayaMaterai    Int      @map("biaya_materai")
+  biayaLegalisasi Int      @map("biaya_legalisasi")
+  feeNotaris      Int      @map("fee_notaris")
+  anggota         Anggota  @relation(fields: [idAnggota], references: [id])
+  angsuran        Angsuran[]
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("pinjaman")
+}
+
+model Angsuran {
+  id           Int      @id @default(autoincrement())
+  idPinjaman   Int      @map("id_pinjaman")
+  idAnggota    Int      @map("id_anggota")
+  nama         String
+  nomorAnggota String   @map("nomor_anggota")
+  tanggal      DateTime @default(now())
+  angsuranKe   Int      @map("angsuran_ke")
+  angsuranPokok Int     @map("angsuran_pokok")
+  angsuranBunga Int     @map("angsuran_bunga")
+  denda        Int      @default(0)
+  totalBayar   Int      @map("total_bayar")
+  saldoPiutang Int      @map("saldo_piutang")
+  pinjaman     Pinjaman @relation(fields: [idPinjaman], references: [id])
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("angsuran")
+}
+
+model Transaksi {
+  id        Int      @id @default(autoincrement())
+  noBukti   String   @map("no_bukti")
+  tanggal   DateTime @default(now())
+  jam       String
+  akun      String
+  kategori  String
+  uraian    String
+  debet     Int?
+  kredit    Int?
+  saldo     Int?
+  operator  String   @default("System")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("transaksi")
+}
+
+model Pengeluaran {
+  id                Int      @id @default(autoincrement())
+  tanggal           DateTime @default(now())
+  kategori          String
+  uraian            String
+  jumlah            Int
+  metodePembayaran  String   @map("metode_pembayaran")
+  operator          String
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  @@map("pengeluaran")
+}
