@@ -127,13 +127,13 @@ export default function SHUPage() {
      totalBunga += angsuranBungaTotal;
      totalDenda += angsuranDendaTotal;
 
-     // Income from loan admin fees (one-time at disbursement) — use pinjaman.tanggalRealisasi
-     const yearlyPinjaman = (pinjaman || []).filter(p => {
-       const tgl = p.tanggalRealisasi;
-       if (!tgl) return false;
-       const year = extractYear(tgl);
-       return year === yearStr;
-     });
+// Income from loan admin fees (one-time at disbursement) — use pinjaman.tanggal
+      const yearlyPinjaman = (pinjaman || []).filter(p => {
+        const tgl = p.tanggal;
+        if (!tgl) return false;
+        const year = extractYear(tgl);
+        return year === yearStr;
+      });
      let pinjamanAdminTotal = 0;
      yearlyPinjaman.forEach(p => {
        pinjamanAdminTotal += (p.biayaAdmin || 0);

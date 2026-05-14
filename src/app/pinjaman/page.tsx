@@ -24,19 +24,18 @@ export default function PinjamanPage() {
     nomorAnggota: "",
     namaSuamiIstri: "",
     alamat: "",
-    tanggal: new Date().toISOString().split("T")[0],
-    sistem: "flat",
-    bunga: "1.5",
-    jenisPinjaman: "",
-    jumlah: "",
-    tenor: "12",
-    denda: "2",
-tujuan: "",
+tanggal: new Date().toISOString().split("T")[0],
+     sistem: "flat",
+     bunga: "1.5",
+     jenisPinjaman: "",
+     jumlah: "",
+     tenor: "12",
+     denda: "2",
+     tujuan: "",
      jenisPencairan: "",
-    noPerjanjian: "",
-    tanggalRealisasi: "",
-    bpjstk: false,
-  });
+     noPerjanjian: "",
+     bpjstk: false,
+   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [submittedPencairan, setSubmittedPencairan] = useState(false);
 
@@ -103,12 +102,12 @@ tujuan: "",
     }
   };
 
-  const calculateJatuhTempo = () => {
-    if (!formData.tanggalRealisasi || !formData.tenor) return "";
-    const tgl = new Date(formData.tanggalRealisasi);
-    tgl.setMonth(tgl.getMonth() + parseInt(formData.tenor));
-    return tgl.toISOString().split("T")[0];
-  };
+const calculateJatuhTempo = () => {
+     if (!formData.tanggal || !formData.tenor) return "";
+     const tgl = new Date(formData.tanggal);
+     tgl.setMonth(tgl.getMonth() + parseInt(formData.tenor));
+     return tgl.toISOString().split("T")[0];
+   };
 
   const calculateBiaya = () => {
     const jumlah = parseInt(formData.jumlah.replace(/\D/g, "")) || 0;
@@ -184,9 +183,8 @@ tujuan: "",
     if (!formData.jumlah) errors.jumlah = "Jumlah wajib diisi";
 if (!formData.tenor) errors.tenor = "Jangka waktu wajib diisi";
      if (!formData.jenisPencairan) errors.jenisPencairan = "Jenis pencairan wajib dipilih";
-    if (!formData.noPerjanjian) errors.noPerjanjian = "No. perjanjian wajib diisi";
-    if (!formData.tanggalRealisasi) errors.tanggalRealisasi = "Tanggal realisasi wajib diisi";
-    setFormErrors(errors);
+if (!formData.noPerjanjian) errors.noPerjanjian = "No. perjanjian wajib diisi";
+     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
@@ -218,19 +216,18 @@ tujuan: formData.tujuan,
          sudahDibayar: 0,
          outstanding: jumlahNum,
          jenisPencairan: formData.jenisPencairan,
-        noPerjanjian: formData.noPerjanjian,
-        tanggalRealisasi: formData.tanggalRealisasi,
-        tanggalJatuhTempo: jatuhTempo,
-        biayaMaterai: biaya.materai,
-        biayaLegalisasi: biaya.legalisasi,
-        feeNotaris: biaya.feeNotaris,
-      };
-      addPinjaman(newPinjaman);
+         noPerjanjian: formData.noPerjanjian,
+         tanggalJatuhTempo: jatuhTempo,
+         biayaMaterai: biaya.materai,
+         biayaLegalisasi: biaya.legalisasi,
+         feeNotaris: biaya.feeNotaris,
+       };
+       addPinjaman(newPinjaman);
 
-      addTransaksi({
-        id: 0,
-        noBukti: `PK-${String(Date.now()).slice(-6)}`,
-        tanggal: formData.tanggalRealisasi,
+       addTransaksi({
+         id: 0,
+         noBukti: `PK-${String(Date.now()).slice(-6)}`,
+         tanggal: formData.tanggal,
         jam: new Date().toLocaleTimeString("id-ID"),
         akun: "Piutang Pinjaman",
         kategori: "Debet",
@@ -241,46 +238,46 @@ tujuan: formData.tujuan,
         operator: "System",
       });
 
-      addTransaksi({
-        id: 0,
-        noBukti: `PK-${String(Date.now()).slice(-6)}`,
-        tanggal: formData.tanggalRealisasi,
-        jam: new Date().toLocaleTimeString("id-ID"),
-        akun: "Kas/Bank",
-        kategori: "Kredit",
-        uraian: `Pencairan Pinjaman ${formData.nama}`,
-        debet: 0,
-        kredit: jumlahNum,
-        saldo: -jumlahNum,
-        operator: "System",
-      });
+addTransaksi({
+         id: 0,
+         noBukti: `PK-${String(Date.now()).slice(-6)}`,
+         tanggal: formData.tanggal,
+         jam: new Date().toLocaleTimeString("id-ID"),
+         akun: "Kas/Bank",
+         kategori: "Kredit",
+         uraian: `Pencairan Pinjaman ${formData.nama}`,
+         debet: 0,
+         kredit: jumlahNum,
+         saldo: -jumlahNum,
+         operator: "System",
+       });
 
-      if (biaya.biayaAdmin > 0) {
-        addTransaksi({ id: 0, noBukti: `ADM-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggalRealisasi, jam: new Date().toLocaleTimeString("id-ID"), akun: "Pendapatan Admin", kategori: "Kredit", uraian: `Biaya Admin`, debet: 0, kredit: biaya.biayaAdmin, saldo: biaya.biayaAdmin, operator: "System" });
-      }
-      if (biaya.danaRisiko > 0) {
-        addTransaksi({ id: 0, noBukti: `RSK-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggalRealisasi, jam: new Date().toLocaleTimeString("id-ID"), akun: "Dana Resiko", kategori: "Kredit", uraian: `Dana Resiko`, debet: 0, kredit: biaya.danaRisiko, saldo: biaya.danaRisiko, operator: "System" });
-      }
-      if (biaya.danaSosial > 0) {
-        addTransaksi({ id: 0, noBukti: `SOS-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggalRealisasi, jam: new Date().toLocaleTimeString("id-ID"), akun: "Dana Sosial", kategori: "Kredit", uraian: `Dana Sosial`, debet: 0, kredit: biaya.danaSosial, saldo: biaya.danaSosial, operator: "System" });
-      }
-      if (biaya.insentif > 0) {
-        addTransaksi({ id: 0, noBukti: `INS-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggalRealisasi, jam: new Date().toLocaleTimeString("id-ID"), akun: "Insentif Penanggung Jawab", kategori: "Kredit", uraian: `Insentif PJ`, debet: 0, kredit: biaya.insentif, saldo: biaya.insentif, operator: "System" });
-      }
+       if (biaya.biayaAdmin > 0) {
+         addTransaksi({ id: 0, noBukti: `ADM-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggal, jam: new Date().toLocaleTimeString("id-ID"), akun: "Pendapatan Admin", kategori: "Kredit", uraian: `Biaya Admin`, debet: 0, kredit: biaya.biayaAdmin, saldo: biaya.biayaAdmin, operator: "System" });
+       }
+       if (biaya.danaRisiko > 0) {
+         addTransaksi({ id: 0, noBukti: `RSK-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggal, jam: new Date().toLocaleTimeString("id-ID"), akun: "Dana Resiko", kategori: "Kredit", uraian: `Dana Resiko`, debet: 0, kredit: biaya.danaRisiko, saldo: biaya.danaRisiko, operator: "System" });
+       }
+       if (biaya.danaSosial > 0) {
+         addTransaksi({ id: 0, noBukti: `SOS-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggal, jam: new Date().toLocaleTimeString("id-ID"), akun: "Dana Sosial", kategori: "Kredit", uraian: `Dana Sosial`, debet: 0, kredit: biaya.danaSosial, saldo: biaya.danaSosial, operator: "System" });
+       }
+       if (biaya.insentif > 0) {
+         addTransaksi({ id: 0, noBukti: `INS-${String(Date.now()).slice(-6)}`, tanggal: formData.tanggal, jam: new Date().toLocaleTimeString("id-ID"), akun: "Insentif Penanggung Jawab", kategori: "Kredit", uraian: `Insentif PJ`, debet: 0, kredit: biaya.insentif, saldo: biaya.insentif, operator: "System" });
+       }
 
-      setSubmittedPencairan(true);
-      setTimeout(() => {
-        setSubmittedPencairan(false);
+       setSubmittedPencairan(true);
+       setTimeout(() => {
+         setSubmittedPencairan(false);
 setFormData({
-           idAnggota: "", nama: "", nomorAnggota: "", namaSuamiIstri: "", alamat: "",
-           tanggal: new Date().toISOString().split("T")[0], sistem: "flat", bunga: "1.5",
-           jenisPinjaman: "", jumlah: "", tenor: "12", denda: "2", tujuan: "",
-           jenisPencairan: "", noPerjanjian: "", tanggalRealisasi: "",
-           bpjstk: false,
-         });
-      }, 3000);
-    }
-  };
+            idAnggota: "", nama: "", nomorAnggota: "", namaSuamiIstri: "", alamat: "",
+            tanggal: new Date().toISOString().split("T")[0], sistem: "flat", bunga: "1.5",
+            jenisPinjaman: "", jumlah: "", tenor: "12", denda: "2", tujuan: "",
+            jenisPencairan: "", noPerjanjian: "",
+            bpjstk: false,
+          });
+       }, 3000);
+     }
+   };
 
   const handleSubmitAngsuran = (e: React.FormEvent) => {
     e.preventDefault();
@@ -368,14 +365,13 @@ setFormData({
                   <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Tujuan Penggunaan</label><input type="text" value={formData.tujuan} onChange={e => setFormData({ ...formData, tujuan: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: "2px solid #eee", fontSize: 16 }} placeholder="Contoh: Modal Usaha" /></div>
                 </div>
 
-                <h3 style={{ fontSize: 18, marginBottom: 24, borderBottom: "2px solid var(--color-primary)", paddingBottom: 12, marginTop: 32 }}>Informasi Kredit & Pencairan</h3>
+<h3 style={{ fontSize: 18, marginBottom: 24, borderBottom: "2px solid var(--color-primary)", paddingBottom: 12, marginTop: 32 }}>Informasi Kredit & Pencairan</h3>
 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
                    <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Jenis Pencairan *</label><select value={formData.jenisPencairan} onChange={e => setFormData({ ...formData, jenisPencairan: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.jenisPencairan ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16, background: "white" }}><option value="">Pilih</option><option value="tls">Tunai ke Siswa</option><option value="tk">Tunai ke Kultum</option><option value="transfer">Transfer</option><option value="potong">Potong Gaji</option></select></div>
-                  <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>No. Perjanjian *</label><input type="text" value={formData.noPerjanjian} onChange={e => setFormData({ ...formData, noPerjanjian: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.noPerjanjian ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16 }} placeholder="PK/2024/001" /></div>
-                  <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Tanggal Realisasi *</label><input type="date" value={formData.tanggalRealisasi} onChange={e => setFormData({ ...formData, tanggalRealisasi: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.tanggalRealisasi ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16 }} /></div>
-                  <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Tanggal Jatuh Tempo</label><input type="text" value={calculateJatuhTempo()} readOnly style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: "2px solid #eee", fontSize: 16, background: "#f9f9f9", color: "#666" }} /></div>
-                  <div><label style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 500 }}><input type="checkbox" checked={formData.bpjstk} onChange={e => setFormData({ ...formData, bpjstk: e.target.checked })} /> Iuran BPJSTK PBPU Rp 20.000/bln</label></div>
-                </div>
+                   <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>No. Perjanjian *</label><input type="text" value={formData.noPerjanjian} onChange={e => setFormData({ ...formData, noPerjanjian: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.noPerjanjian ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16 }} placeholder="PK/2024/001" /></div>
+                   <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Tanggal Jatuh Tempo</label><input type="text" value={calculateJatuhTempo()} readOnly style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: "2px solid #eee", fontSize: 16, background: "#f9f9f9", color: "#666" }} /></div>
+                   <div><label style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 500 }}><input type="checkbox" checked={formData.bpjstk} onChange={e => setFormData({ ...formData, bpjstk: e.target.checked })} /> Iuran BPJSTK PBPU Rp 20.000/bln</label></div>
+                 </div>
 
                 {preview && (
                   <div style={{ background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)", borderRadius: 12, padding: 24, marginBottom: 24, color: "white" }}>
