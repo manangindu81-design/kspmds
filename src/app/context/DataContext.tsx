@@ -58,7 +58,7 @@ export interface Pinjaman {
   nomorAnggota: string;
   namaSuamiIstri: string;
   alamat: string;
-  tanggal: string;
+tanggal: string;
   sistem: string;
   jenisPinjaman: string;
   jumlah: number;
@@ -70,7 +70,6 @@ export interface Pinjaman {
   biayaAdmin: number;
   sudahDibayar: number;
   outstanding: number;
-  jenisKredit: string;
   jenisPencairan: string;
   noPerjanjian: string;
   tanggalRealisasi: string;

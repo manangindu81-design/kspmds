@@ -31,9 +31,8 @@ export default function PinjamanPage() {
     jumlah: "",
     tenor: "12",
     denda: "2",
-    tujuan: "",
-    jenisKredit: "",
-    jenisPencairan: "",
+tujuan: "",
+     jenisPencairan: "",
     noPerjanjian: "",
     tanggalRealisasi: "",
     bpjstk: false,
@@ -183,9 +182,8 @@ export default function PinjamanPage() {
     if (!formData.tanggal) errors.tanggal = "Tanggal wajib diisi";
     if (!formData.jenisPinjaman) errors.jenisPinjaman = "Jenis pinjaman wajib diisi";
     if (!formData.jumlah) errors.jumlah = "Jumlah wajib diisi";
-    if (!formData.tenor) errors.tenor = "Jangka waktu wajib diisi";
-    if (!formData.jenisKredit) errors.jenisKredit = "Jenis kredit wajib dipilih";
-    if (!formData.jenisPencairan) errors.jenisPencairan = "Jenis pencairan wajib dipilih";
+if (!formData.tenor) errors.tenor = "Jangka waktu wajib diisi";
+     if (!formData.jenisPencairan) errors.jenisPencairan = "Jenis pencairan wajib dipilih";
     if (!formData.noPerjanjian) errors.noPerjanjian = "No. perjanjian wajib diisi";
     if (!formData.tanggalRealisasi) errors.tanggalRealisasi = "Tanggal realisasi wajib diisi";
     setFormErrors(errors);
@@ -214,13 +212,12 @@ export default function PinjamanPage() {
         tenor: parseInt(formData.tenor),
         bunga: currentBunga,
         denda: parseFloat(formData.denda) || 2,
-        tujuan: formData.tujuan,
-        status: "Disetujui",
-        biayaAdmin: biaya.totalPotongan,
-        sudahDibayar: 0,
-        outstanding: jumlahNum,
-        jenisKredit: formData.jenisKredit,
-        jenisPencairan: formData.jenisPencairan,
+tujuan: formData.tujuan,
+         status: "Disetujui",
+         biayaAdmin: biaya.totalPotongan,
+         sudahDibayar: 0,
+         outstanding: jumlahNum,
+         jenisPencairan: formData.jenisPencairan,
         noPerjanjian: formData.noPerjanjian,
         tanggalRealisasi: formData.tanggalRealisasi,
         tanggalJatuhTempo: jatuhTempo,
@@ -274,13 +271,13 @@ export default function PinjamanPage() {
       setSubmittedPencairan(true);
       setTimeout(() => {
         setSubmittedPencairan(false);
-        setFormData({
-          idAnggota: "", nama: "", nomorAnggota: "", namaSuamiIstri: "", alamat: "",
-          tanggal: new Date().toISOString().split("T")[0], sistem: "flat", bunga: "1.5",
-          jenisPinjaman: "", jumlah: "", tenor: "12", denda: "2", tujuan: "",
-          jenisKredit: "", jenisPencairan: "", noPerjanjian: "", tanggalRealisasi: "",
-          bpjstk: false,
-        });
+setFormData({
+           idAnggota: "", nama: "", nomorAnggota: "", namaSuamiIstri: "", alamat: "",
+           tanggal: new Date().toISOString().split("T")[0], sistem: "flat", bunga: "1.5",
+           jenisPinjaman: "", jumlah: "", tenor: "12", denda: "2", tujuan: "",
+           jenisPencairan: "", noPerjanjian: "", tanggalRealisasi: "",
+           bpjstk: false,
+         });
       }, 3000);
     }
   };
@@ -372,9 +369,8 @@ export default function PinjamanPage() {
                 </div>
 
                 <h3 style={{ fontSize: 18, marginBottom: 24, borderBottom: "2px solid var(--color-primary)", paddingBottom: 12, marginTop: 32 }}>Informasi Kredit & Pencairan</h3>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
-                  <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Jenis Kredit *</label><select value={formData.jenisKredit} onChange={e => setFormData({ ...formData, jenisKredit: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.jenisKredit ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16, background: "white" }}><option value="">Pilih</option><option value="invest">Investment/Kapital Kerja</option><option value="kmk">KMK</option><option value="kpr">KPR</option><option value="konsumtif">Konsumtif</option></select></div>
-                  <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Jenis Pencairan *</label><select value={formData.jenisPencairan} onChange={e => setFormData({ ...formData, jenisPencairan: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.jenisPencairan ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16, background: "white" }}><option value="">Pilih</option><option value="tls">Tunai ke Siswa</option><option value="tk">Tunai ke Kultum</option><option value="transfer">Transfer</option><option value="potong">Potong Gaji</option></select></div>
+<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
+                   <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Jenis Pencairan *</label><select value={formData.jenisPencairan} onChange={e => setFormData({ ...formData, jenisPencairan: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.jenisPencairan ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16, background: "white" }}><option value="">Pilih</option><option value="tls">Tunai ke Siswa</option><option value="tk">Tunai ke Kultum</option><option value="transfer">Transfer</option><option value="potong">Potong Gaji</option></select></div>
                   <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>No. Perjanjian *</label><input type="text" value={formData.noPerjanjian} onChange={e => setFormData({ ...formData, noPerjanjian: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.noPerjanjian ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16 }} placeholder="PK/2024/001" /></div>
                   <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Tanggal Realisasi *</label><input type="date" value={formData.tanggalRealisasi} onChange={e => setFormData({ ...formData, tanggalRealisasi: e.target.value })} style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: formErrors.tanggalRealisasi ? "2px solid #e74c3c" : "2px solid #eee", fontSize: 16 }} /></div>
                   <div><label style={{ display: "block", fontWeight: 500, marginBottom: 8 }}>Tanggal Jatuh Tempo</label><input type="text" value={calculateJatuhTempo()} readOnly style={{ width: "100%", padding: "14px 16px", borderRadius: 8, border: "2px solid #eee", fontSize: 16, background: "#f9f9f9", color: "#666" }} /></div>
