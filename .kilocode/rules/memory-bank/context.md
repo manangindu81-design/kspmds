@@ -71,7 +71,7 @@ Aplikasi Koperasi Simpan Pinjam (KSP) dengan sistem pengelolaan data anggota, si
   - Pencairan Pinjaman: validasi anggota, calculate biaya, buat jurnal ganda
   - Input Angsuran: reduce outstanding, create transaksi
   - Transaksi: akun disimpan sebagai nama (kode) untuk laporan
-  - Hapus/Mass delete: semua tombol hapus bekerja dengan benar, cascading delete untuk pinjaman→angsuran
+  - Hapus/Mass delete: semua tombol hapus bekerja dengan baik, cascading delete untuk pinjaman→angsuran
 - Edit anggota berfungsi dengan baik
 - Import Excel anggota & simpanan berfungsi dengan validasi ketat (all-or-nothing, detection duplikat)
 - Menu **Kartu Simpanan** dengan pencarian anggota (No. NBA/Nama/NIK) dan riwayat transaksi real-time
@@ -80,6 +80,7 @@ Aplikasi Koperasi Simpan Pinjam (KSP) dengan sistem pengelolaan data anggota, si
 - Menu **Pengeluaran** dengan 15 kategori biaya (bunga simpanan, gaji, operasional, insentif) dan validasi input lengkap
 - **SHU menghitung dari transaksi, angsuran (bunga/denda), dan biaya admin pinjaman**, menghasilkan nonzero untuk tahun-tahun aktif
 - **Hapus Simpanan Selection** (`/simpanan` → Data tab): pilih jenis simpanan via checkbox, hapus massal dengan konfirmasi detail
+- **Jenis Kredit field removed** dari form pinjaman, formData, validasi, dan interface Pinjaman
 
 ## Riwayat Perubahan
 
@@ -118,3 +119,4 @@ Aplikasi Koperasi Simpan Pinjam (KSP) dengan sistem pengelolaan data anggota, si
 | 2026-04-24 | **Edit inline pengurus/pengawas/karyawan** di halaman Profil: tombol Edit per row, form input untuk jabatan/nama/gelar (karyawan tanpa gelar), simpan/batal; perubahan tersimpan otomatis ke localStorage dan tercermin di SHU allocation dan semua laporan
 | 2026-04-24 | **Enable Sibuhar withdrawals & fix Cash Flow**: Simpanan input form supports metode 'Penarikan' with balance validation; negative Simpanan record automatically reduces Sibuhar balance; generates correct Kas Keluar transaction (kredit, kategori 'Penarikan Simpanan Sibuhar'); balance validation also added to Excel import for penarikan; Laporan Arus Kas filters fixed (case-insensitive) to correctly classify Penarikan as Kas Keluar under Aktivitas Pendanaan
 | 2026-04-24 | **UI improvement for withdrawals**: added instructional infobox in Simpanan input form with.clear guidance on setoran vs penarikan; Metode dropdown now includes icons (💰 Tunai, 🏦 Transfer, ⏬ Penarikan) for better clarity
+| 2026-05-14 | **Remove Jenis Kredit field**: removed from pinjaman form, formData state, validation, and Pinjaman interface in DataContext
